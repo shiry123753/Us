@@ -1,0 +1,1041 @@
+
+
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>us. 我們的日常</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f1;
+    --warm: #f0e8dc;
+    --blush: #e8c5b0;
+    --rose: #c47c5a;
+    --deep: #3d2c24;
+    --muted: #8a7060;
+    --sage: #8a9e8c;
+    --accent: #d4956a;
+    --white: #ffffff;
+    --shadow: rgba(61,44,36,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--cream);
+    color: var(--deep);
+    min-height: 100vh;
+    font-weight: 300;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 1px solid var(--warm);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--rose);
+    letter-spacing: 1px;
+  }
+
+  .logo span { font-style: italic; font-size: 13px; color: var(--muted); margin-left: 6px; font-family: 'Noto Sans TC', sans-serif; font-weight: 300; }
+
+  .date-pill {
+    background: var(--warm);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    background: var(--white);
+    border-top: 1px solid var(--warm);
+    display: flex;
+    padding: 10px 0 16px;
+  }
+
+  .nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0;
+    color: var(--muted);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+
+  .nav-btn.active { color: var(--rose); }
+  .nav-btn svg { width: 20px; height: 20px; }
+
+  /* ── MAIN ── */
+  .main {
+    padding-top: 70px;
+    padding-bottom: 90px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; padding: 20px 20px; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--deep);
+    margin-bottom: 4px;
+  }
+  .section-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 12px var(--shadow);
+    border: 1px solid var(--warm);
+  }
+
+  .card-title {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  /* ── REMINDER BANNER ── */
+  .reminder-banner {
+    background: linear-gradient(135deg, var(--rose), var(--accent));
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .reminder-icon { font-size: 28px; }
+  .reminder-text { flex: 1; }
+  .reminder-text h3 { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+  .reminder-text p { font-size: 12px; opacity: 0.85; }
+
+  .reminder-btn {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .reminder-btn:hover { background: rgba(255,255,255,0.35); }
+
+  /* ── TODAY SCHEDULE ── */
+  .schedule-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .schedule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--warm);
+  }
+  .schedule-item:last-child { border-bottom: none; }
+
+  .time-col { font-size: 11px; color: var(--muted); min-width: 44px; padding-top: 2px; }
+  .event-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blush); margin-top: 4px; flex-shrink: 0; }
+  .event-dot.rose { background: var(--rose); }
+  .event-dot.sage { background: var(--sage); }
+  .event-info { flex: 1; }
+  .event-name { font-size: 14px; color: var(--deep); }
+  .event-tag { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .who-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--warm);
+    color: var(--muted);
+  }
+  .who-badge.shared { background: #f0ece8; color: var(--rose); }
+
+  /* ── ADD BUTTON ── */
+  .add-btn {
+    width: 100%;
+    padding: 12px;
+    background: none;
+    border: 1.5px dashed var(--blush);
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .add-btn:hover { border-color: var(--rose); color: var(--rose); background: rgba(196,124,90,0.04); }
+
+  /* ── QUICK LOG ── */
+  .quick-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .tag-chip {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: var(--warm);
+    border: 1.5px solid transparent;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.2s;
+    color: var(--deep);
+  }
+  .tag-chip:hover, .tag-chip.selected {
+    background: var(--rose);
+    color: white;
+    border-color: var(--rose);
+  }
+
+  .duration-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .duration-row label { font-size: 13px; color: var(--muted); }
+  .duration-input {
+    border: 1.5px solid var(--warm);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--deep);
+    background: var(--cream);
+    width: 80px;
+    outline: none;
+  }
+  .duration-input:focus { border-color: var(--rose); }
+
+  .note-input {
+    width: 100%;
+    border: 1.5px solid var(--warm);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--deep);
+    background: var(--cream);
+    outline: none;
+    resize: none;
+    margin-bottom: 12px;
+  }
+  .note-input:focus { border-color: var(--rose); }
+
+  .submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--rose);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Noto Sans TC', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: #b56d4d; }
+
+  /* ── WEEK SUMMARY ── */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .week-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .week-day-label { font-size: 10px; color: var(--muted); }
+  .week-day-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .week-day-dot.has-log { background: var(--blush); color: var(--deep); }
+  .week-day-dot.today { background: var(--rose); color: white; font-weight: 500; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .stat-box {
+    background: var(--warm);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--rose); }
+  .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .activity-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .activity-label { font-size: 13px; color: var(--deep); min-width: 60px; }
+  .bar-track { flex: 1; height: 8px; background: var(--warm); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; background: var(--rose); transition: width 0.6s ease; }
+  .bar-fill.sage { background: var(--sage); }
+  .bar-fill.blush { background: var(--blush); }
+  .activity-hours { font-size: 12px; color: var(--muted); min-width: 36px; text-align: right; }
+
+  /* ── LOG HISTORY ── */
+  .log-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--warm);
+  }
+  .log-item:last-child { border-bottom: none; }
+  .log-emoji { font-size: 22px; width: 36px; height: 36px; background: var(--warm); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .log-info { flex: 1; }
+  .log-name { font-size: 14px; color: var(--deep); }
+  .log-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .log-who { font-size: 10px; color: var(--muted); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(61,44,36,0.4);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--cream);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 36px;
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  .modal-handle { width: 36px; height: 4px; background: var(--blush); border-radius: 2px; margin: 0 auto 20px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 18px; color: var(--deep); }
+
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-input {
+    width: 100%;
+    border: 1.5px solid var(--warm);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--deep);
+    background: var(--white);
+    outline: none;
+  }
+  .form-input:focus { border-color: var(--rose); }
+
+  .who-toggle {
+    display: flex;
+    gap: 8px;
+  }
+  .who-opt {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border: 1.5px solid var(--warm);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Noto Sans TC', sans-serif;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+  .who-opt.active { border-color: var(--rose); background: rgba(196,124,90,0.08); color: var(--rose); }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .toast {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--deep);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    z-index: 300;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  .empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .empty-state div { font-size: 32px; margin-bottom: 8px; }
+
+  /* ── AVATAR FILTER ── */
+  /* ── EYE ROW ── */
+  .eye-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--warm);
+  }
+  .eye-row-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    cursor: pointer;
+    background: var(--white);
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--warm);
+    user-select: none;
+  }
+  .eye-row-item:last-child { border-bottom: none; }
+  .eye-row-item:active { background: var(--cream); }
+  .eye-row-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eye-row-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: opacity 0.2s, filter 0.2s;
+    border: 2px solid var(--blush);
+  }
+  .eye-row-item.partner-row .eye-row-avatar { border-color: var(--sage); }
+  .eye-row-item.off .eye-row-avatar { opacity: 0.3; filter: grayscale(1); border-color: #ddd; }
+  .eye-row-name {
+    font-size: 14px;
+    color: var(--deep);
+    transition: color 0.2s;
+  }
+  .eye-row-item.off .eye-row-name { color: #bbb; }
+  .eye-svg-wrap { width: 24px; height: 24px; flex-shrink: 0; }
+  /* open eye */
+  .eye-open { display: block; }
+  .eye-closed { display: none; }
+  .eye-row-item.off .eye-open { display: none; }
+  .eye-row-item.off .eye-closed { display: block; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">us.<span>我們的日常</span></div>
+  <div class="date-pill" id="todayLabel"></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ── PAGE: 今天 ── -->
+  <div class="page active" id="page-today">
+
+    <div class="reminder-banner" id="reminderBanner">
+      <div class="reminder-icon">🌙</div>
+      <div class="reminder-text">
+        <h3>規劃明天的行程</h3>
+        <p>還沒安排明天，現在來排一下？</p>
+      </div>
+      <button class="reminder-btn" onclick="openAddEvent(true)">+ 新增</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">今日行程</div>
+      <div class="schedule-list" id="todaySchedule"></div>
+      <button class="add-btn" onclick="openAddEvent(false)">＋ 新增今天的行程</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">明天預覽</div>
+      <div class="schedule-list" id="tomorrowPreview"></div>
+      <button class="add-btn" onclick="openAddEvent(true)">＋ 新增明天的行程</button>
+    </div>
+
+  </div>
+
+  <!-- ── PAGE: 記錄 ── -->
+  <div class="page" id="page-log">
+    <div class="section-title">記錄生活</div>
+    <div class="section-sub">今天做了什麼？</div>
+
+    <div class="card">
+      <div class="card-title">快速選擇</div>
+      <div class="quick-tags" id="quickTags">
+        <div class="tag-chip" onclick="selectTag(this,'健身 💪')">健身 💪</div>
+        <div class="tag-chip" onclick="selectTag(this,'跑步 🏃')">跑步 🏃</div>
+        <div class="tag-chip" onclick="selectTag(this,'約會 💕')">約會 💕</div>
+        <div class="tag-chip" onclick="selectTag(this,'外食 🍜')">外食 🍜</div>
+        <div class="tag-chip" onclick="selectTag(this,'在家煮 🍳')">在家煮 🍳</div>
+        <div class="tag-chip" onclick="selectTag(this,'爬山 🌿')">爬山 🌿</div>
+        <div class="tag-chip" onclick="selectTag(this,'看電影 🎬')">看電影 🎬</div>
+        <div class="tag-chip" onclick="selectTag(this,'讀書 📖')">讀書 📖</div>
+        <div class="tag-chip" onclick="selectTag(this,'練琴 🎹')">練琴 🎹</div>
+        <div class="tag-chip" onclick="selectTag(this,'攀岩 🧗')">攀岩 🧗</div>
+      </div>
+
+      <div class="duration-row">
+        <label>時長</label>
+        <input class="duration-input" id="durationInput" type="number" min="0" placeholder="60" />
+        <label>分鐘</label>
+      </div>
+
+      <textarea class="note-input" id="noteInput" rows="2" placeholder="備註（可空白）"></textarea>
+
+      <div class="who-toggle" style="margin-bottom:14px;">
+        <div class="who-opt active" id="whoMe" onclick="setWho('me')">我</div>
+        <div class="who-opt" id="whoPartner" onclick="setWho('partner')">他 / 她</div>
+        <div class="who-opt" id="whoUs" onclick="setWho('us')">我們一起</div>
+      </div>
+
+      <button class="submit-btn" onclick="submitLog()">記錄下來 ✓</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">今天已記錄</div>
+      <div class="eye-row">
+        <div class="eye-row-item on" id="avMe" onclick="toggleEye('me', false)">
+          <div class="eye-row-left">
+            <div class="eye-row-avatar">🙋</div>
+            <span class="eye-row-name" id="avNameMe">我</span>
+          </div>
+          <div class="eye-svg-wrap"><svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg><svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-5 10-5 10 5 10 5"/><path d="M6 14.5l1-2M12 15.5v-2M18 14.5l-1-2"/></svg></div>
+        </div>
+        <div class="eye-row-item on partner-row" id="avPartner" onclick="toggleEye('partner', false)">
+          <div class="eye-row-left">
+            <div class="eye-row-avatar">🧑</div>
+            <span class="eye-row-name" id="avNamePartner">他 / 她</span>
+          </div>
+          <div class="eye-svg-wrap"><svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg><svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-5 10-5 10 5 10 5"/><path d="M6 14.5l1-2M12 15.5v-2M18 14.5l-1-2"/></svg></div>
+        </div>
+      </div>
+      <div id="todayLogs">
+        <div class="empty-state"><div>📋</div>還沒有記錄</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PAGE: 這週 ── -->
+  <div class="page" id="page-week">
+    <div class="section-title">這一週</div>
+    <div class="section-sub" id="weekRange"></div>
+
+    <div class="card">
+      <div class="card-title">出席天數</div>
+      <div class="week-grid" id="weekGrid"></div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num" id="totalActivities">0</div>
+        <div class="stat-label">活動次數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="totalHours">0h</div>
+        <div class="stat-label">總時長</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">活動分佈</div>
+      <div id="activityBars">
+        <div class="empty-state"><div>📊</div>還沒有足夠的記錄</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">本週所有記錄</div>
+      <div class="eye-row">
+        <div class="eye-row-item on" id="avMeWeek" onclick="toggleEye('me', true)">
+          <div class="eye-row-left">
+            <div class="eye-row-avatar">🙋</div>
+            <span class="eye-row-name" id="avNameMeWeek">我</span>
+          </div>
+          <div class="eye-svg-wrap"><svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg><svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-5 10-5 10 5 10 5"/><path d="M6 14.5l1-2M12 15.5v-2M18 14.5l-1-2"/></svg></div>
+        </div>
+        <div class="eye-row-item on partner-row" id="avPartnerWeek" onclick="toggleEye('partner', true)">
+          <div class="eye-row-left">
+            <div class="eye-row-avatar">🧑</div>
+            <span class="eye-row-name" id="avNamePartnerWeek">他 / 她</span>
+          </div>
+          <div class="eye-svg-wrap"><svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg><svg class="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12s3.5-5 10-5 10 5 10 5"/><path d="M6 14.5l1-2M12 15.5v-2M18 14.5l-1-2"/></svg></div>
+        </div>
+      </div>
+      <div id="weekLogs">
+        <div class="empty-state"><div>🗓️</div>這週還沒有記錄</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="nav">
+  <button class="nav-btn active" id="nav-today" onclick="switchPage('today')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+    今天
+  </button>
+  <button class="nav-btn" id="nav-log" onclick="switchPage('log')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+    記錄
+  </button>
+  <button class="nav-btn" id="nav-week" onclick="switchPage('week')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+    這週
+  </button>
+</div>
+
+<!-- ADD EVENT MODAL -->
+<div class="modal-overlay" id="eventModal">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="closeModal('eventModal')">✕</button>
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">新增行程</div>
+
+    <div class="form-group">
+      <label class="form-label">行程名稱</label>
+      <input class="form-input" id="eventName" placeholder="例：健身、和朋友吃飯" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">時間</label>
+      <input class="form-input" id="eventTime" type="time" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">誰的行程</label>
+      <div class="who-toggle">
+        <div class="who-opt active" id="evtWhoMe" onclick="setEvtWho('me')">我</div>
+        <div class="who-opt" id="evtWhoPartner" onclick="setEvtWho('partner')">他 / 她</div>
+        <div class="who-opt" id="evtWhoUs" onclick="setEvtWho('us')">我們一起</div>
+      </div>
+    </div>
+    <button class="submit-btn" onclick="saveEvent()" style="margin-top:6px;">新增行程 ✓</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STATE ──
+let state = {
+  events: JSON.parse(localStorage.getItem('us_events') || '[]'),
+  logs: JSON.parse(localStorage.getItem('us_logs') || '[]'),
+};
+
+let selectedTag = '';
+let currentWho = 'me';
+let currentEvtWho = 'me';
+let addingTomorrow = false;
+
+// 頭像篩選狀態（只有 me / partner，us=一起 跟著 me+partner 的交集顯示）
+let eyeState = { me: true, partner: true };
+let eyeStateWeek = { me: true, partner: true };
+
+function toggleEye(who, isWeek) {
+  const st = isWeek ? eyeStateWeek : eyeState;
+  st[who] = !st[who];
+  // 至少一個要開著
+  if (!st.me && !st.partner) { st[who] = true; return; }
+  updateEyeUI(isWeek);
+  if (isWeek) renderWeekLogs();
+  else renderTodayLogs();
+}
+
+function updateEyeUI(isWeek) {
+  const st = isWeek ? eyeStateWeek : eyeState;
+  const suffix = isWeek ? 'Week' : '';
+  ['me','partner'].forEach(k => {
+    const cap = k.charAt(0).toUpperCase()+k.slice(1);
+    const row = document.getElementById('av'+cap+suffix);
+    if (!row) return;
+    const isPartner = k === 'partner';
+    if (st[k]) {
+      row.className = 'eye-row-item on' + (isPartner ? ' partner-row' : '');
+    } else {
+      row.className = 'eye-row-item off' + (isPartner ? ' partner-row' : '');
+    }
+  });
+}
+
+function filterByEye(logs, isWeek) {
+  const st = isWeek ? eyeStateWeek : eyeState;
+  return logs.filter(l => {
+    if (l.who === 'me') return st.me;
+    if (l.who === 'partner') return st.partner;
+    if (l.who === 'us') return st.me || st.partner; // 一起的跟著顯示
+    return true;
+  });
+}
+
+const TODAY = new Date();
+const days = ['日','一','二','三','四','五','六'];
+const whoLabel = { me: '我', partner: '他/她', us: '我們一起' };
+
+function save() {
+  localStorage.setItem('us_events', JSON.stringify(state.events));
+  localStorage.setItem('us_logs', JSON.stringify(state.logs));
+}
+
+function dateStr(d) {
+  return d.toISOString().slice(0,10);
+}
+
+function isoToday() { return dateStr(TODAY); }
+function isoTomorrow() {
+  const t = new Date(TODAY); t.setDate(t.getDate()+1);
+  return dateStr(t);
+}
+
+// ── INIT ──
+function init() {
+  const d = TODAY;
+  document.getElementById('todayLabel').textContent =
+    `${d.getMonth()+1}/${d.getDate()} 週${days[d.getDay()]}`;
+  document.getElementById('weekRange').textContent = getWeekRange();
+  renderToday();
+  renderWeek();
+}
+
+// ── PAGE SWITCH ──
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+  if (name === 'week') renderWeek();
+  if (name === 'log') renderTodayLogs();
+}
+
+// ── RENDER TODAY ──
+function renderToday() {
+  const todayEvts = state.events.filter(e => e.date === isoToday())
+    .sort((a,b) => a.time.localeCompare(b.time));
+  const tmrEvts = state.events.filter(e => e.date === isoTomorrow())
+    .sort((a,b) => a.time.localeCompare(b.time));
+  renderScheduleList('todaySchedule', todayEvts);
+  renderScheduleList('tomorrowPreview', tmrEvts);
+}
+
+function renderScheduleList(id, evts) {
+  const el = document.getElementById(id);
+  if (!evts.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0;">還沒有行程</div>';
+    return;
+  }
+  el.innerHTML = evts.map(e => `
+    <div class="schedule-item">
+      <div class="time-col">${e.time || '--:--'}</div>
+      <div class="event-dot ${e.who==='us'?'rose':e.who==='partner'?'sage':''}"></div>
+      <div class="event-info">
+        <div class="event-name">${e.name}</div>
+        <div class="event-tag">${whoLabel[e.who]}</div>
+      </div>
+      <span class="who-badge ${e.who==='us'?'shared':''}">${e.who==='us'?'共同':e.who==='partner'?'他/她':'我'}</span>
+    </div>
+  `).join('');
+}
+
+// ── QUICK LOG ──
+function selectTag(el, tag) {
+  document.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTag = tag;
+}
+
+function setWho(w) {
+  currentWho = w;
+  ['me','partner','us'].forEach(k => {
+    document.getElementById('who'+k.charAt(0).toUpperCase()+k.slice(1))
+      .classList.toggle('active', k===w);
+  });
+}
+
+function submitLog() {
+  if (!selectedTag) { showToast('請先選擇一個活動 😊'); return; }
+  const dur = parseInt(document.getElementById('durationInput').value) || 0;
+  const note = document.getElementById('noteInput').value.trim();
+  const entry = {
+    id: Date.now(),
+    tag: selectedTag,
+    duration: dur,
+    note,
+    who: currentWho,
+    date: isoToday(),
+    ts: new Date().toISOString(),
+  };
+  state.logs.push(entry);
+  save();
+  showToast('記錄成功 ✓');
+  document.getElementById('durationInput').value = '';
+  document.getElementById('noteInput').value = '';
+  selectedTag = '';
+  document.querySelectorAll('.tag-chip').forEach(c => c.classList.remove('selected'));
+  setWho('me');
+  renderTodayLogs();
+  renderWeek();
+}
+
+function renderTodayLogs() {
+  const el = document.getElementById('todayLogs');
+  const raw = state.logs.filter(l => l.date === isoToday());
+  const logs = filterByEye(raw, false);
+  if (!logs.length) {
+    el.innerHTML = '<div class="empty-state"><div>📋</div>沒有符合篩選的記錄</div>';
+    return;
+  }
+  el.innerHTML = [...logs].reverse().map(l => `
+    <div class="log-item">
+      <div class="log-emoji">${l.tag.split(' ')[1]||'📌'}</div>
+      <div class="log-info">
+        <div class="log-name">${l.tag.split(' ')[0]}</div>
+        <div class="log-detail">${l.duration ? l.duration+'分鐘' : ''}${l.note ? (l.duration?' · ':'')+l.note : ''}</div>
+      </div>
+      <div class="log-who">${whoLabel[l.who]}</div>
+    </div>
+  `).join('');
+}
+
+// ── WEEK ──
+function getWeekRange() {
+  const d = new Date(TODAY);
+  const dow = d.getDay();
+  const mon = new Date(d); mon.setDate(d.getDate() - dow + 1);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  return `${mon.getMonth()+1}/${mon.getDate()} – ${sun.getMonth()+1}/${sun.getDate()}`;
+}
+
+function renderWeek() {
+  // grid
+  const grid = document.getElementById('weekGrid');
+  const d = new Date(TODAY);
+  const dow = d.getDay();
+  const mon = new Date(d); mon.setDate(d.getDate() - dow + 1);
+  let html = '';
+  for (let i=0; i<7; i++) {
+    const day = new Date(mon); day.setDate(mon.getDate()+i);
+    const ds = dateStr(day);
+    const isToday = ds === isoToday();
+    const hasLog = state.logs.some(l => l.date === ds);
+    const num = day.getDate();
+    html += `<div class="week-day">
+      <div class="week-day-label">${['一','二','三','四','五','六','日'][i]}</div>
+      <div class="week-day-dot ${isToday?'today':hasLog?'has-log':''}">${num}</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+
+  // stats
+  const weekLogs = state.logs.filter(l => {
+    const ds = l.date;
+    const day = new Date(mon);
+    const end = new Date(mon); end.setDate(mon.getDate()+6);
+    return ds >= dateStr(mon) && ds <= dateStr(end);
+  });
+  document.getElementById('totalActivities').textContent = weekLogs.length;
+  const totalMin = weekLogs.reduce((a,l) => a + (l.duration||0), 0);
+  document.getElementById('totalHours').textContent = totalMin >= 60
+    ? Math.round(totalMin/60*10)/10 + 'h'
+    : totalMin + 'm';
+
+  // activity bars
+  const barsEl = document.getElementById('activityBars');
+  if (!weekLogs.length) {
+    barsEl.innerHTML = '<div class="empty-state"><div>📊</div>還沒有足夠的記錄</div>';
+  } else {
+    const map = {};
+    weekLogs.forEach(l => {
+      const k = l.tag.split(' ')[0];
+      map[k] = (map[k]||0) + (l.duration||30);
+    });
+    const max = Math.max(...Object.values(map));
+    const colors = ['','sage','blush','','sage'];
+    barsEl.innerHTML = Object.entries(map)
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,5)
+      .map(([k,v],i) => `
+      <div class="activity-bar-row">
+        <div class="activity-label">${k}</div>
+        <div class="bar-track"><div class="bar-fill ${colors[i%colors.length]}" style="width:${Math.round(v/max*100)}%"></div></div>
+        <div class="activity-hours">${v>=60?Math.round(v/60*10)/10+'h':v+'m'}</div>
+      </div>`).join('');
+  }
+
+  renderWeekLogs(weekLogs);
+}
+
+function renderWeekLogs(allWeekLogs) {
+  // if called without arg, recalculate
+  if (!allWeekLogs) {
+    const d = new Date(TODAY);
+    const dow = d.getDay();
+    const mon = new Date(d); mon.setDate(d.getDate() - dow + 1);
+    const end = new Date(mon); end.setDate(mon.getDate()+6);
+    allWeekLogs = state.logs.filter(l => l.date >= dateStr(mon) && l.date <= dateStr(end));
+  }
+  const weekLogsEl = document.getElementById('weekLogs');
+  const filtered = filterByEye(allWeekLogs, true);
+  if (!filtered.length) {
+    weekLogsEl.innerHTML = '<div class="empty-state"><div>🗓️</div>沒有符合篩選的記錄</div>';
+  } else {
+    weekLogsEl.innerHTML = [...filtered].reverse().map(l => `
+      <div class="log-item">
+        <div class="log-emoji">${l.tag.split(' ')[1]||'📌'}</div>
+        <div class="log-info">
+          <div class="log-name">${l.tag.split(' ')[0]}</div>
+          <div class="log-detail">${l.date.slice(5).replace('-','/')}${l.duration?' · '+l.duration+'分鐘':''}${l.note?' · '+l.note:''}</div>
+        </div>
+        <div class="log-who">${whoLabel[l.who]}</div>
+      </div>
+    `).join('');
+  }
+}
+
+// ── ADD EVENT ──
+function openAddEvent(tomorrow) {
+  addingTomorrow = tomorrow;
+  document.getElementById('modalTitle').textContent = tomorrow ? '新增明天的行程' : '新增今天的行程';
+  document.getElementById('eventName').value = '';
+  document.getElementById('eventTime').value = '';
+  setEvtWho('me');
+  document.getElementById('eventModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function setEvtWho(w) {
+  currentEvtWho = w;
+  ['me','partner','us'].forEach(k => {
+    document.getElementById('evtWho'+k.charAt(0).toUpperCase()+k.slice(1))
+      .classList.toggle('active', k===w);
+  });
+}
+
+function saveEvent() {
+  const name = document.getElementById('eventName').value.trim();
+  if (!name) { showToast('請輸入行程名稱'); return; }
+  const time = document.getElementById('eventTime').value;
+  const evt = {
+    id: Date.now(),
+    name,
+    time,
+    who: currentEvtWho,
+    date: addingTomorrow ? isoTomorrow() : isoToday(),
+  };
+  state.events.push(evt);
+  save();
+  closeModal('eventModal');
+  showToast('行程已新增 ✓');
+  renderToday();
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// close modal on overlay click
+document.getElementById('eventModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal('eventModal');
+});
+
+init();
+</script>
+</body>
+</html>
